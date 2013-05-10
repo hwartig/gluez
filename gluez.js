@@ -436,6 +436,11 @@ var Gluez = {};
       .eq("cat /etc/group | grep -E '^"+name+":' | wc -l", 0)
   });
 
+  Shell.registerResource("add_ppa_repository", function(name, opts){
+    this.step("add-apt-repository ppa:"+name).
+      eq("grep -R "+name+" /etc/apt/sources.list.d | wc -l", 2)
+  });
+
   Shell.registerResource("dir", function(name, opts){
     this.step("mkdir " + name).check("-d "+name);
 
