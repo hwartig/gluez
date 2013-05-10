@@ -190,11 +190,11 @@ var Gluez = {};
   };
 
   Resource.prototype.writeUp2date = function(indent){
-    this.shell.w("echo \"up2date ["+this.shell.username+"] "+this.label+"\"", indent);
+    this.shell.w("echo \"\033[0;32mup2date\033[00m ["+this.shell.username+"] "+this.label+"\"", indent);
   };
 
   Resource.prototype.writeNotUp2date = function(indent){
-    this.shell.w("echo \"not up2date ["+this.shell.username+"] "+this.label+"\"", indent);
+    this.shell.w("echo \"\033[0;31mnot up2date\033[00m ["+this.shell.username+"] "+this.label+"\"", indent);
   };
 
   Resource.prototype.writeExitCodeCheck = function(success, failure, indent){
@@ -268,11 +268,11 @@ var Gluez = {};
               this.writeExitCodeCheck(
                 // success
                 function(indent){
-                  this.shell.w("echo \"updating ["+this.shell.username+"] ("+(i+1)+"/"+this.steps.length+") "+this.label+"\"", indent);
+                  this.shell.w("echo \"\033[0;33mupdating\033[00m ["+this.shell.username+"] ("+(i+1)+"/"+this.steps.length+") "+this.label+"\"", indent);
                 },
                 // failure
                 function(indent){
-                  this.shell.w("echo \"not up2date ["+this.shell.username+"] ("+(i+1)+"/"+this.steps.length+") "+this.label+"\"", indent);
+                  this.shell.w("echo \"\033[0;31mnot up2date\033[00m ["+this.shell.username+"] ("+(i+1)+"/"+this.steps.length+") "+this.label+"\"", indent);
                   this.shell.w("exit 1", indent);
                 },
                 indent
