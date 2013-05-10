@@ -416,16 +416,17 @@ var Gluez = {};
   });
 
   Shell.registerResource("user", function(name, opts){
-    var cmd = "useradd --create-home --uid "+opts.uid+" --gid "+opts.gid+" --shell /bin/bash";
-    if(opts.groups)
-      cmd += " -G "+opts.groups.join(",");
-
-    cmd += " "+name;
-
-    this.step(cmd)
+    this.step("useradd --create-home --uid "+opts.uid+" --gid "+opts.gid+" --shell /bin/bash " +name)
       .eq("cat /etc/passwd | grep -E '^"+name+":' | wc -l", 1)
       .eq("cat /etc/passwd | cut -f 3 -d ':' | grep '"+opts.uid+"' | wc -l", 1)
       .eq("cat /etc/passwd | cut -f 4 -d ':' | grep '"+opts.gid+"' | wc -l", 1);
+
+    if(opts.groups)
+      for(var i = 0,length = opts.groups.length; i < length; i++) {
+        groupName = opts.groups[i]
+        this.step("usermod -a -G "+groupName+" "+name)
+          .eq("id "+name+" |grep "+groupName+" | wc -l", 1)
+      }
   });
 
   Shell.registerResource("dir", function(name, opts){
