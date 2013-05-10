@@ -19,6 +19,8 @@ var Gluez = {};
 
   Shell.prototype.recipe = function(recipeName, opts){
     opts = opts||{};
+    if(this.recipes[recipeName] == undefined)
+      console.error("couldn't find recipe: "+recipeName);
     return this.recipes[recipeName].apply(this, [opts]);
   };
 
@@ -52,7 +54,7 @@ var Gluez = {};
       if(r instanceof Shell)  r.writeFunctions(dry);
       else{
         this.w("function "+r.functionName+" {");
-        
+
         r.writeFunctionInfo(1);
         r.writeTransferStart(0);
         r.writeFunctionBody(1, dry);
@@ -434,7 +436,7 @@ var Gluez = {};
   });
 
   Gluez.Shell = Shell;
-  
+
 })();
 
 
