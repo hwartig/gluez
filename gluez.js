@@ -355,6 +355,13 @@ var Gluez = {};
       .eq("gem list "+name+" --installed --version "+opts.version+" | grep 'true' | wc -l", 1);
   });
 
+  Shell.registerResource("rvm_ruby", function(ruby_version, opts){
+    this.step("curl -L https://get.rvm.io | bash -s stable --autolibs=enabled && source /etc/profile.d/rvm.sh")
+      .eq("printenv | grep rvm_path | wc -l", 1);
+    this.step("rvm install " + ruby_version)
+      .eq("rvm list | grep "+ruby_version+" | wc -l", 1);
+  });
+
   Shell.registerResource("group", function(name, opts){
     this.step("groupadd --gid "+opts.gid+" "+name)
       .eq("cat /etc/group | grep -E '^"+name+":' | wc -l", 1)
