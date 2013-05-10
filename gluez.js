@@ -429,6 +429,13 @@ var Gluez = {};
       }
   });
 
+  Shell.registerResource("remove_user", function(name, opts){
+    this.step("deluser --remove-home "+name)
+      .eq("cat /etc/passwd | grep -E '^"+name+":' | wc -l", 0)
+    this.step("delgroup --only-if-empty "+name)
+      .eq("cat /etc/group | grep -E '^"+name+":' | wc -l", 0)
+  });
+
   Shell.registerResource("dir", function(name, opts){
     this.step("mkdir " + name).check("-d "+name);
 
