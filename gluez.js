@@ -372,8 +372,14 @@ var Gluez = {};
     this.step("ln -f -s "+opts.target+" "+name).check("-L "+name);
   });
 
-  Shell.registerResource("postgresql_database", function(name, opts){
-    this.step("echo 'create database "+name+" with owner = "+name+"' | psql").eq("echo '\\l' | psql -t | cut -f 1 -d '|' | grep "+name+" | wc -l", 1);
+  Shell.registerResource("postgresql_database", function(databaseName, opts){
+    this.step("echo 'create database "+databaseName+" with owner = "+databaseName+"' | psql").eq("echo '\\l' | psql -t | cut -f 1 -d '|' | grep "+databaseName+" | wc -l", 1);
+    if(opts.extensions)
+      for(var i = 0,length = opts.extensions.length; i < length; i++) {
+        extensionName = opts.extensions[i]
+        this.step("echo 'create extension if not exists "+extensionName+";' | psql -d "+databaseName)
+          .eq("echo '\\dx' | psql -d "+databaseName+" -A --field-separator ' ' | cut -f 1 -d ' ' | grep "+extensionName+" | wc -l", 1);
+      }
   });
 
   Shell.registerResource("postgresql_role", function(name, opts){
